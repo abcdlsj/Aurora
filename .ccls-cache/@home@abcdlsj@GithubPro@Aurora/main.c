@@ -1,3 +1,8 @@
+/*
+ *   Copyright (c) 2020 @abcdlsj
+ *   All rights reserved.
+ */
+
 #include "main.h"
 
 void doit(int fd);
@@ -7,88 +12,6 @@ void serve_static(int fd, char *filename, int filesize);
 void get_filetype(char *filename, char *filetype);
 void serve_dynamic(int fd, char * filename, char *cgiargs);
 void clienterror(int fd, char *cause, char *errnum, char *shortmsg, char *longmsg);
-
-/* $begin errorfuns */
-/* $begin unixerror */
-void unix_error(char *msg) { /* Unix-style error */
-  fprintf(stderr, "%s: %s\n", msg, strerror(errno));
-  exit(0);
-}
-/* $end unixerror */
-void gai_error(int code, char *msg) /* Getaddrinfo-style error */ {
-  fprintf(stderr, "%s: %s\n", msg, gai_strerror(code));
-  exit(0);
-}
-/* $end errorfuns */
-
-//
-
-int Dup2(int fd1, int fd2) {
-  int rc;
-
-  if ((rc = dup2(fd1, fd2)) < 0)
-    unix_error("Dup2 error");
-  return rc;
-}
-
-/* $begin forkwrapper */
-pid_t Fork(void) {
-  pid_t pid;
-
-  if ((pid = fork()) < 0)
-    unix_error("Fork error");
-  return pid;
-}
-/* $end forkwrapper */
-
-void Execve(const char *filename, char *const argv[], char *const envp[])
-{
-  if (execve(filename, argv, envp) < 0)
-    unix_error("Execve error");
-}
-
-/* $begin wait */
-pid_t Wait(int *status)
-{
-  pid_t pid;
-
-  if ((pid  = wait(status)) < 0)
-    unix_error("Wait error");
-  return pid;
-}
-/* $end wait */
-//
-void *Mmap(void *addr, size_t len, int prot, int flags, int fd, off_t offset) {
-  void *ptr;
-
-  if ((ptr = mmap(addr, len, prot, flags, fd, offset)) == ((void *) -1))
-    unix_error("mmap error");
-  return(ptr);
-}
-
-void Munmap(void *start, size_t length)
-{
-  if (munmap(start, length) < 0)
-    unix_error("munmap error");
-}
-
-int Open(const char *pathname, int flags, mode_t mode)
-{
-  int rc;
-
-  if ((rc = open(pathname, flags, mode))  < 0)
-    unix_error("Open error");
-  return rc;
-}
-
-void Close(int fd)
-{
-  int rc;
-
-  if ((rc = close(fd)) < 0)
-    unix_error("Close error");
-}
-
 
 /****************************************
  * The Rio package - Robust I/O functions
@@ -244,48 +167,6 @@ ssize_t rio_readlineb(rio_t *rp, void *usrbuf, size_t maxlen)
 }
 /* $end rio_readlineb */
 
-/**********************************
- * Wrappers for robust I/O routines
- **********************************/
-ssize_t Rio_readn(int fd, void *ptr, size_t nbytes)
-{
-  ssize_t n;
-
-  if ((n = rio_readn(fd, ptr, nbytes)) < 0)
-    unix_error("Rio_readn error");
-  return n;
-}
-
-void Rio_writen(int fd, void *usrbuf, size_t n)
-{
-  if (rio_writen(fd, usrbuf, n) != n)
-    unix_error("Rio_writen error");
-}
-
-void Rio_readinitb(rio_t *rp, int fd)
-{
-  rio_readinitb(rp, fd);
-}
-
-ssize_t Rio_readnb(rio_t *rp, void *usrbuf, size_t n)
-{
-  ssize_t rc;
-
-  if ((rc = rio_readnb(rp, usrbuf, n)) < 0)
-    unix_error("Rio_readnb error");
-  return rc;
-}
-
-ssize_t Rio_readlineb(rio_t *rp, void *usrbuf, size_t maxlen)
-{
-  ssize_t rc;
-
-  if ((rc = rio_readlineb(rp, usrbuf, maxlen)) < 0)
-    unix_error("Rio_readlineb error");
-  return rc;
-}
-
-
 //封装，达到协议无关性
 int open_clientfd(char *hostname, char *port) {
   int clientfd, rc;
@@ -371,37 +252,6 @@ int open_listenfd(char *port)
   /* 返回监听描述符 */
   return listenfd;
 }
-
-int Open_clientfd(char *hostname, char *port) {
-  int rc;
-
-  if ((rc = open_clientfd(hostname, port)) < 0)
-    unix_error("Open_clientfd error");
-  return rc;
-}
-
-int Open_listenfd(char *port) {
-  int rc;
-
-  if((rc = open_listenfd(port)) < 0)
-    unix_error("Open_listenfd error");
-  return rc;
-}
-
-int Accept(int s, struct sockaddr *addr, socklen_t *addrlen) {
-  int rc;
-
-  if((rc = accept(s, addr, addrlen)) < 0)
-    unix_error("Accept error");
-  return rc;
-}
-
-void Getnameinfo(const struct sockaddr *sa, socklen_t salen, char *host, size_t hostlen, char *serv, size_t servlen, int flags) {
-  int rc;
-  if((rc = getnameinfo(sa, salen, host, hostlen, serv, servlen, flags)) != 0)
-    gai_error(rc, "Getnameinfo error");
-}
-
 /* main */
 
 int main(int argc, char **argv) {
@@ -416,11 +266,11 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
-  listenfd = Open_listenfd(argv[1]);
+  listenfd = open_listenfd(argv[1]);
   while(1) {
     clientlen = sizeof(clientaddr);
-    connfd = Accept(listenfd, (struct sockaddr *)&clientaddr, &clientlen);
-    Getnameinfo((struct sockaddr *)&clientaddr, clientlen, hostname, MAXLINE, port, MAXLINE, 0);
+    connfd = accept(listenfd, (struct sockaddr *)&clientaddr, &clientlen);
+    getnameinfo((struct sockaddr *)&clientaddr, clientlen, hostname, MAXLINE, port, MAXLINE, 0);
     printf("Accepted connection from (%s, %s)\n", hostname, port);
     doit(connfd);
     close(connfd);
@@ -435,12 +285,24 @@ void doit(int fd) {
   char filename[MAXLINE], cgiargs[MAXLINE];
   rio_t rio;
 
-  Rio_readinitb(&rio, fd); //初始化 RIO 缓冲区
-  if(!Rio_readlineb(&rio, buf, MAXLINE)) return;
+  rio_readinitb(&rio, fd); //初始化 RIO 缓冲区
+  if(!rio_readlineb(&rio, buf, MAXLINE)) return;
   printf("%s", buf);
+
+  /*读请求行*/
   sscanf(buf, "%s %s %s", method, uri, version);
+  //输出
+  printf("%s %s %s\r\n", method, uri, version);
+
   if(strcasecmp(method, "GET")) {
     clienterror(fd, method, "501", "Not Implemented", "Aurora does not implement this method");
+    return;
+  }
+  read_requesthdrs(&rio);
+
+  is_static = parse_uri(uri, filename, cgiargs);
+  if(stat(filename, &sbuf) < 0) {
+    clienterror(fd, filename, "404", "Not found", "Aurora couldn't find this file");
     return;
   }
   if(is_static) {
@@ -462,11 +324,11 @@ void doit(int fd) {
 int parse_uri(char *uri, char *filename, char *cgiargs) {
   char *ptr;
   if(!strstr(uri, "cgi-bin")) {
-    strcpy(cgiargs, "cgi-bin");
+    strcpy(cgiargs, "");
     strcpy(filename, ".");
     strcat(filename, uri);
     if(uri[strlen(uri) - 1] == '/')
-      strcat(filename, "home.html");
+      strcat(filename, "index.html");
     return 1;
   }
   else {
@@ -489,19 +351,19 @@ void serve_static(int fd, char *filename, int filesize) {
 
   get_filetype(filename, filetype);
   sprintf(buf, "HTTP/1.0 200 OK\r\n");
-  Rio_writen(fd, buf, strlen(buf));
+  rio_writen(fd, buf, strlen(buf));
   sprintf(buf, "Server: Aurora Web Server\r\n");
-  Rio_writen(fd, buf, strlen(buf));
+  rio_writen(fd, buf, strlen(buf));
   sprintf(buf, "Content-length: %d\r\n", filesize);
-  Rio_writen(fd, buf, strlen(buf));
+  rio_writen(fd, buf, strlen(buf));
   sprintf(buf, "Content-type: %s\r\n\r\n", filetype);
-  Rio_writen(fd, buf, strlen(buf));
+  rio_writen(fd, buf, strlen(buf));
 
-  srcfd = Open(filename, O_RDONLY, 0);
-  srcp = Mmap(0, filesize, PROT_READ, MAP_PRIVATE, srcfd, 0); //line:netp:servestatic:mmap
-  Close(srcfd);                       //line:netp:servestatic:close
-  Rio_writen(fd, srcp, filesize);     //line:netp:servestatic:write
-  Munmap(srcp, filesize);
+  srcfd = open(filename, O_RDONLY, 0);
+  srcp = mmap(0, filesize, PROT_READ, MAP_PRIVATE, srcfd, 0);
+  close(srcfd);
+  rio_writen(fd, srcp, filesize);
+  munmap(srcp, filesize);
 }
 
 void get_filetype(char *filename, char *filetype) {
@@ -513,6 +375,10 @@ void get_filetype(char *filename, char *filetype) {
     strcpy(filetype, "image/png");
   else if (strstr(filename, ".jpg"))
     strcpy(filetype, "image/jpeg");
+  else if (strstr(filename, ".mepg"))
+    strcpy(filetype, "video/mpeg");
+  else if (strstr(filename, ".webm"))
+    strcpy(filetype, "video/webm");
   else
     strcpy(filetype, "text/plain");
 }
@@ -527,17 +393,17 @@ void serve_dynamic(int fd, char *filename, char *cgiargs)
 
   /* Return first part of HTTP response */
   sprintf(buf, "HTTP/1.0 200 OK\r\n");
-  Rio_writen(fd, buf, strlen(buf));
+  rio_writen(fd, buf, strlen(buf));
   sprintf(buf, "Server: Aurora Web Server\r\n");
-  Rio_writen(fd, buf, strlen(buf));
+  rio_writen(fd, buf, strlen(buf));
 
-  if (Fork() == 0) { /* Child */ //line:netp:servedynamic:fork
+  if (fork() == 0) { /* Child */
     /* Real server would set all CGI vars here */
-    setenv("QUERY_STRING", cgiargs, 1); //line:netp:servedynamic:setenv
-    Dup2(fd, STDOUT_FILENO);         /* Redirect stdout to client */ //line:netp:servedynamic:dup2
-    Execve(filename, emptylist, environ); /* Run CGI program */ //line:netp:servedynamic:execve
+    setenv("QUERY_STRING", cgiargs, 1);
+    dup2(fd, STDOUT_FILENO);         /* Redirect stdout to client */
+    execve(filename, emptylist, environ); /* Run CGI program */
   }
-  Wait(NULL); /* Parent waits for and reaps child */ //line:netp:servedynamic:wait
+  wait(NULL); /* Parent waits for and reaps child */
 }
 /* $end serve_dynamic */
 
@@ -546,10 +412,10 @@ void read_requesthdrs(rio_t *rp)
 {
   char buf[MAXLINE];
 
-  Rio_readlineb(rp, buf, MAXLINE);
+  rio_readlineb(rp, buf, MAXLINE);
   printf("%s", buf);
   while(strcmp(buf, "\r\n")) {
-    Rio_readlineb(rp, buf, MAXLINE);
+    rio_readlineb(rp, buf, MAXLINE);
     printf("%s", buf);
   }
   return;
@@ -563,20 +429,20 @@ void clienterror(int fd, char *cause, char *errnum,
 
   /* Print the HTTP response headers */
   sprintf(buf, "HTTP/1.0 %s %s\r\n", errnum, shortmsg);
-  Rio_writen(fd, buf, strlen(buf));
+  rio_writen(fd, buf, strlen(buf));
   sprintf(buf, "Content-type: text/html\r\n\r\n");
-  Rio_writen(fd, buf, strlen(buf));
+  rio_writen(fd, buf, strlen(buf));
 
   /* Print the HTTP response body */
   sprintf(buf, "<html><title>Aurora Error</title>");
-  Rio_writen(fd, buf, strlen(buf));
+  rio_writen(fd, buf, strlen(buf));
   sprintf(buf, "<body bgcolor=""ffffff"">\r\n");
-  Rio_writen(fd, buf, strlen(buf));
+  rio_writen(fd, buf, strlen(buf));
   sprintf(buf, "%s: %s\r\n", errnum, shortmsg);
-  Rio_writen(fd, buf, strlen(buf));
+  rio_writen(fd, buf, strlen(buf));
   sprintf(buf, "<p>%s: %s\r\n", longmsg, cause);
-  Rio_writen(fd, buf, strlen(buf));
+  rio_writen(fd, buf, strlen(buf));
   sprintf(buf, "<hr><em>The Aurora Web server</em>\r\n");
-  Rio_writen(fd, buf, strlen(buf));
+  rio_writen(fd, buf, strlen(buf));
 }
 /* $end clienterror */

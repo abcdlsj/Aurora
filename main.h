@@ -1,3 +1,8 @@
+/*
+ *   Copyright (c) 2020 @abcdlsj
+ *   All rights reserved.
+ */
+
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
@@ -45,20 +50,6 @@ void gai_error(int code, char *msg);
 
 int open_clientfd(char *hostname, char *port);
 int open_listenfd(char *port);
-int Open_clientfd(char *hostname, char *port);
-int Open_listenfd(char *port);
-
-int Accept(int s, struct sockaddr *addr, socklen_t *addrlen);
-void Connect(int sockfd, struct sockaddr *serv_addr, int addrlen);
-
-void Getnameinfo(const struct sockaddr *sa, socklen_t salen, char *host, size_t hostlen, char *serv, size_t servlen, int flags);
-
-
-int Open(const char *pathname, int flags, mode_t mode);
-int Dup2(int fd1, int fd2);
-
-void *Mmap(void *addr, size_t len, int prot, int flags, int fd, off_t offset);
-void Munmap(void *start, size_t length);
 
 ssize_t rio_readn(int fd, void *usrbuf, size_t t);
 ssize_t rio_writen(int fd, void *usrbuf, size_t n);
@@ -66,12 +57,6 @@ static ssize_t rio_read(rio_t *rrp, char *usrbuf, size_t n);
 void rio_readinitb(rio_t *rp, int fd);
 ssize_t rio_readnb(rio_t *rp, void *usrbuf, size_t n);
 ssize_t rio_readlineb(rio_t *rp, void *usrbuf, size_t maxlen);
-ssize_t Rio_readn(int fd, void *ptr, size_t nbytes);
-void Rio_writen(int fd, void *usrbuf, size_t n);
-void Rio_readinitb(rio_t *rp, int fd);
-ssize_t Rio_readnb(rio_t *rp, void *usrbuf, size_t n);
-ssize_t Rio_readlineb(rio_t *rp, void *usrbuf, size_t maxlen);
-
 
 void read_requesthdrs(rio_t *rp);
 void clienterror(int fd, char *cause, char *errnum,
