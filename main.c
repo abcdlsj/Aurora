@@ -48,7 +48,7 @@ handler_t *Signal(int signum, handler_t *handler)
 // 更好的处理 SIGPIPE 信号和 EPIPE 错误
 void Rio_writen(int fd, void *usrbuf, size_t n)
 {
-    if (Rio_writen(fd, usrbuf, n) != n) {
+    if (rio_writen(fd, usrbuf, n) != n) {
       if (errno == EPIPE)
 	fprintf(stderr, "EPIPE error");
 
