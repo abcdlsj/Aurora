@@ -1,8 +1,3 @@
-/*
- *   Copyright (c) 2020 @abcdlsj
- *   All rights reserved.
- */
-
 /* main.c --- Aurora Main.c
  *
  * Author: abcdlsj <lisongjianshuai@gmail.com>
@@ -117,6 +112,7 @@ void doit(int fd) {
   read_requesthdrs(&rio, cgiargs, method);
 
   is_static = parse_uri(uri, filename, cgiargs, method);
+
   if(stat(filename, &sbuf) < 0) {
     clienterror(fd, filename, "404", "Not found", "Aurora couldn't find this file");
     return;
@@ -141,32 +137,32 @@ void doit(int fd) {
 
 int parse_uri(char *uri, char *filename, char *cgiargs, char *method) {
   char *ptr;
-  if(!strstr(uri, "cgi-bin")) {
+  if (!strstr(uri, "cgi-bin")) {
     strcpy(cgiargs, "");
     strcpy(filename, ".");
     strcat(filename, uri);
-    if(uri[strlen(uri) - 1] == '/')
+    if (uri[strlen(uri) - 1] == '/')
       strcat(filename, "index.html");
     return 1;
   }
 
   else {
-    if(strcasecmp(method, "GET") == 0) {
-      ptr = index(uri, '?');
-      if(ptr) {
-	strcpy(cgiargs, ptr+1);
-	*ptr = '\0';
-      }
-      else
-	strcpy(cgiargs, "");
+    // if (strcasecmp(method, "GET") == 0) {
+    ptr = index(uri, '?');
+    if (ptr) {
+      strcpy(cgiargs, ptr + 1);
+      *ptr = '\0';
+    } else {
+      strcpy(cgiargs, "");
     }
     strcpy(filename, ".");
     strcat(filename, uri);
     return 0;
+    //}
   }
 }
 
-void serve_static(int fd, char *filename, int filesize, char* method) {
+void serve_static(int fd, char *filename, int filesize, char *method) {
   int srcfd;
   char *srcp, filetype[MAXLINE], buf[MAXLINE];
 
@@ -180,6 +176,7 @@ void serve_static(int fd, char *filename, int filesize, char* method) {
   sprintf(buf, "Content-type: %s\r\n\r\n", filetype);
   Rio_writen(fd, buf, strlen(buf));
 
+  //head 不返回响应体
   if(strcasecmp(method, "HEAD") == 0)
     return;
 
@@ -221,11 +218,10 @@ void serve_dynamic(int fd, char *filename, char *cgiargs, char* method)
   sprintf(buf, "Server: Aurora Web Server\r\n");
   Rio_writen(fd, buf, strlen(buf));
 
-  if(strcasecmp(method, "HEAD") == 0) return;
-
   if (fork() == 0) { /* Child */
     /* Real server would set all CGI vars here */
     setenv("QUERY_STRING", cgiargs, 1);
+    setenv("REQUEST_METHOD", method, 1);
     dup2(fd, STDOUT_FILENO);         /* Redirect stdout to client */
     execve(filename, emptylist, environ); /* Run CGI program */
   }

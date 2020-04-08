@@ -1,9 +1,17 @@
-<form action="cgi-bin/add" method="GET">
-First Number:<br>
-<input type="text" name="FirstNumber" value="">
-<br><br>
-Second Number:<br>
-<input type="text" name="SecondNumber" value="">
-<br><br>
-<input type="submit" value="Submit">
-</form>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Tiny Server</title>
+</head>
+
+<body>
+    <form action="/cgi-bin/addr" method="GET">
+        <p>first number: <input type="text" name="first" /></p>
+        <p>second number: <input type="text" name="second" /></p>
+        <input type="submit" value="Submit" />
+    </form>
+</body>
+
+</html>
