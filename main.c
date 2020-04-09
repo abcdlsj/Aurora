@@ -68,24 +68,24 @@ int main(int argc, char **argv) {
   listenfd = open_listenfd(argv[1]);
 
   //SIGCHLD 回收僵死子进程的资源
-  Signal(SIGCHLD, sigchid_handler);
+  //Signal(SIGCHLD, sigchid_handler);
 
   while(1) {
     clientlen = sizeof(clientaddr);
     connfd = accept(listenfd, (struct sockaddr *)&clientaddr, &clientlen);
     getnameinfo((struct sockaddr *)&clientaddr, clientlen, hostname, MAXLINE, port, MAXLINE, 0);
 
-    /* //多进程 */
-    if (fork() == 0) {
-      close(listenfd);
-      doit(connfd);
-      close(connfd);
-      exit(0);
-    }
-
-    close(connfd);
     printf("Accepted connection from (%s, %s)\n", hostname, port);
+    /* //多进程 */
+    /* if (fork() == 0) { */
+    /*   close(listenfd); */
+    /*   doit(connfd); */
+    /*   close(connfd); */
+    /*   exit(0); */
+    /* } */
 
+    doit(connfd);
+    close(connfd);
   }
 }
 
@@ -104,6 +104,7 @@ void doit(int fd) {
   sscanf(buf, "%s %s %s", method, uri, version);
 
   //不是这三个请求返回 501
+
   if(strcasecmp(method, "GET") && strcasecmp(method, "HEAD") && strcasecmp(method, "POST")) {
     clienterror(fd, method, "501", "Not Implemented", "Aurora does not implement this method");
     return;
@@ -130,7 +131,9 @@ void doit(int fd) {
       clienterror(fd, filename, "403", "Forbidden", "Aurora couldn't run the CGI programe");
       return;
     }
+
     /*GET HEAD POST*/
+    /* TODO: dynamic not work 20200408-17:23:05*/
     serve_dynamic(fd, filename, cgiargs, method);
   }
 }
@@ -167,7 +170,7 @@ void serve_static(int fd, char *filename, int filesize, char *method) {
   char *srcp, filetype[MAXLINE], buf[MAXLINE];
 
   get_filetype(filename, filetype);
-  sprintf(buf, "HTTP/1.0 200 OK\r\n");
+  sprintf(buf, "HTTP/1.1 200 OK\r\n");
   Rio_writen(fd, buf, strlen(buf));
   sprintf(buf, "Server: Aurora Web Server\r\n");
   Rio_writen(fd, buf, strlen(buf));
@@ -213,7 +216,7 @@ void serve_dynamic(int fd, char *filename, char *cgiargs, char* method)
   char buf[MAXLINE], *emptylist[] = { NULL };
 
   /* Return first part of HTTP response */
-  sprintf(buf, "HTTP/1.0 200 OK\r\n");
+  sprintf(buf, "HTTP/1.1 200 OK\r\n");
   Rio_writen(fd, buf, strlen(buf));
   sprintf(buf, "Server: Aurora Web Server\r\n");
   Rio_writen(fd, buf, strlen(buf));
@@ -254,7 +257,7 @@ void clienterror(int fd, char *cause, char *errnum,
   char buf[MAXLINE];
 
   /* Print the HTTP response headers */
-  sprintf(buf, "HTTP/1.0 %s %s\r\n", errnum, shortmsg);
+  sprintf(buf, "HTTP/1.1 %s %s\r\n", errnum, shortmsg);
   Rio_writen(fd, buf, strlen(buf));
   sprintf(buf, "Content-type: text/html\r\n\r\n");
   Rio_writen(fd, buf, strlen(buf));
