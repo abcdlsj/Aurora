@@ -40,6 +40,7 @@ handler_t *Signal(int signum, handler_t *handler)
 }
 /* $end sigaction */
 
+// 更好的处理 SIGPIPE 信号和 EPIPE 错误
 void Rio_writen(int fd, void *usrbuf, size_t n)
 {
     if (rio_writen(fd, usrbuf, n) != n) {
@@ -67,24 +68,24 @@ int main(int argc, char **argv) {
   listenfd = open_listenfd(argv[1]);
 
   //SIGCHLD 回收僵死子进程的资源
-  Signal(SIGCHLD, sigchid_handler);
+  //Signal(SIGCHLD, sigchid_handler);
 
   while(1) {
     clientlen = sizeof(clientaddr);
     connfd = accept(listenfd, (struct sockaddr *)&clientaddr, &clientlen);
     getnameinfo((struct sockaddr *)&clientaddr, clientlen, hostname, MAXLINE, port, MAXLINE, 0);
 
-    /* //多进程 */
-    if (fork() == 0) {
-      close(listenfd);
-      doit(connfd);
-      close(connfd);
-      exit(0);
-    }
-
-    close(connfd);
     printf("Accepted connection from (%s, %s)\n", hostname, port);
+    /* //多进程 */
+    /* if (fork() == 0) { */
+    /*   close(listenfd); */
+    /*   doit(connfd); */
+    /*   close(connfd); */
+    /*   exit(0); */
+    /* } */
 
+    doit(connfd);
+    close(connfd);
   }
 }
 
@@ -103,6 +104,7 @@ void doit(int fd) {
   sscanf(buf, "%s %s %s", method, uri, version);
 
   //不是这三个请求返回 501
+
   if(strcasecmp(method, "GET") && strcasecmp(method, "HEAD") && strcasecmp(method, "POST")) {
     clienterror(fd, method, "501", "Not Implemented", "Aurora does not implement this method");
     return;
@@ -111,6 +113,7 @@ void doit(int fd) {
   read_requesthdrs(&rio, cgiargs, method);
 
   is_static = parse_uri(uri, filename, cgiargs, method);
+
   if(stat(filename, &sbuf) < 0) {
     clienterror(fd, filename, "404", "Not found", "Aurora couldn't find this file");
     return;
@@ -128,59 +131,62 @@ void doit(int fd) {
       clienterror(fd, filename, "403", "Forbidden", "Aurora couldn't run the CGI programe");
       return;
     }
+
     /*GET HEAD POST*/
+    /* TODO: dynamic not work 20200408-17:23:05*/
     serve_dynamic(fd, filename, cgiargs, method);
   }
 }
 
 int parse_uri(char *uri, char *filename, char *cgiargs, char *method) {
   char *ptr;
-  if(!strstr(uri, "cgi-bin")) {
+  if (!strstr(uri, "cgi-bin")) {
     strcpy(cgiargs, "");
     strcpy(filename, ".");
     strcat(filename, uri);
-    if(uri[strlen(uri) - 1] == '/')
-      strcat(filename, "index.html");
+    if (uri[strlen(uri) - 1] == '/')
+      strcat(filename, "home.html");
     return 1;
   }
 
   else {
-    if(strcasecmp(method, "GET") == 0) {
-      ptr = index(uri, '?');
-      if(ptr) {
-	strcpy(cgiargs, ptr+1);
-	*ptr = '\0';
-      }
-      else
-	strcpy(cgiargs, "");
+    // if (strcasecmp(method, "GET") == 0) {
+    ptr = index(uri, '?');
+    if (ptr) {
+      strcpy(cgiargs, ptr + 1);
+      *ptr = '\0';
+    } else {
+      strcpy(cgiargs, "");
     }
     strcpy(filename, ".");
     strcat(filename, uri);
     return 0;
+    //}
   }
 }
 
-void serve_static(int fd, char *filename, int filesize, char* method) {
+void serve_static(int fd, char *filename, int filesize, char *method) {
   int srcfd;
   char *srcp, filetype[MAXLINE], buf[MAXLINE];
 
   get_filetype(filename, filetype);
-  sprintf(buf, "HTTP/1.0 200 OK\r\n");
-  rio_writen(fd, buf, strlen(buf));
+  sprintf(buf, "HTTP/1.1 200 OK\r\n");
+  Rio_writen(fd, buf, strlen(buf));
   sprintf(buf, "Server: Aurora Web Server\r\n");
-  rio_writen(fd, buf, strlen(buf));
+  Rio_writen(fd, buf, strlen(buf));
   sprintf(buf, "Content-length: %d\r\n", filesize);
-  rio_writen(fd, buf, strlen(buf));
+  Rio_writen(fd, buf, strlen(buf));
   sprintf(buf, "Content-type: %s\r\n\r\n", filetype);
-  rio_writen(fd, buf, strlen(buf));
+  Rio_writen(fd, buf, strlen(buf));
 
+  //head 不返回响应体
   if(strcasecmp(method, "HEAD") == 0)
     return;
 
   srcfd = open(filename, O_RDONLY, 0);
   srcp = mmap(0, filesize, PROT_READ, MAP_PRIVATE, srcfd, 0);
   close(srcfd);
-  rio_writen(fd, srcp, filesize);
+  Rio_writen(fd, srcp, filesize);
   munmap(srcp, filesize);
 }
 
@@ -210,16 +216,15 @@ void serve_dynamic(int fd, char *filename, char *cgiargs, char* method)
   char buf[MAXLINE], *emptylist[] = { NULL };
 
   /* Return first part of HTTP response */
-  sprintf(buf, "HTTP/1.0 200 OK\r\n");
-  rio_writen(fd, buf, strlen(buf));
+  sprintf(buf, "HTTP/1.1 200 OK\r\n");
+  Rio_writen(fd, buf, strlen(buf));
   sprintf(buf, "Server: Aurora Web Server\r\n");
-  rio_writen(fd, buf, strlen(buf));
-
-  if(strcasecmp(method, "HEAD") == 0) return;
+  Rio_writen(fd, buf, strlen(buf));
 
   if (fork() == 0) { /* Child */
     /* Real server would set all CGI vars here */
     setenv("QUERY_STRING", cgiargs, 1);
+    setenv("REQUEST_METHOD", method, 1);
     dup2(fd, STDOUT_FILENO);         /* Redirect stdout to client */
     execve(filename, emptylist, environ); /* Run CGI program */
   }
@@ -252,21 +257,21 @@ void clienterror(int fd, char *cause, char *errnum,
   char buf[MAXLINE];
 
   /* Print the HTTP response headers */
-  sprintf(buf, "HTTP/1.0 %s %s\r\n", errnum, shortmsg);
-  rio_writen(fd, buf, strlen(buf));
+  sprintf(buf, "HTTP/1.1 %s %s\r\n", errnum, shortmsg);
+  Rio_writen(fd, buf, strlen(buf));
   sprintf(buf, "Content-type: text/html\r\n\r\n");
-  rio_writen(fd, buf, strlen(buf));
+  Rio_writen(fd, buf, strlen(buf));
 
   /* Print the HTTP response body */
   sprintf(buf, "<html><title>Aurora Error</title>");
-  rio_writen(fd, buf, strlen(buf));
+  Rio_writen(fd, buf, strlen(buf));
   sprintf(buf, "<body bgcolor=""ffffff"">\r\n");
-  rio_writen(fd, buf, strlen(buf));
+  Rio_writen(fd, buf, strlen(buf));
   sprintf(buf, "%s: %s\r\n", errnum, shortmsg);
-  rio_writen(fd, buf, strlen(buf));
+  Rio_writen(fd, buf, strlen(buf));
   sprintf(buf, "<p>%s: %s\r\n", longmsg, cause);
-  rio_writen(fd, buf, strlen(buf));
+  Rio_writen(fd, buf, strlen(buf));
   sprintf(buf, "<hr><em>The Aurora Web server</em>\r\n");
-  rio_writen(fd, buf, strlen(buf));
+  Rio_writen(fd, buf, strlen(buf));
 }
 /* $end clienterror */
