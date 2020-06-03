@@ -1,0 +1,3 @@
+/home/abcdlsj/github/webserver/Aurora/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/abcdlsj/github/webserver/Aurora/cmake-build-debug/CMakeFiles/Aurora.dir
+/home/abcdlsj/github/webserver/Aurora/cmake-build-debug/CMakeFiles/edit_cache.dir
