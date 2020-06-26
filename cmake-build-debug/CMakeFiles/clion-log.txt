@@ -1,6 +1,1 @@
-/opt/clion/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/abcdlsj/github/webserver/Aurora
-CMake Error at CMakeLists.txt:1 (cmake_minimum_required):
-  CMake 3.17 or higher is required.  You are running version 3.16.5
-
-
--- Configuring incomplete, errors occurred!
+CMakeLists.txt not found in /home/abcdlsj/github/webserver/Aurora Select CMakeLists.txt file...
