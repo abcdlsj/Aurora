@@ -1,4 +1,6 @@
-/usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/usr/bin/make -DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_COMPILER=/usr/bin/g++ -G "CodeBlocks - Unix Makefiles" /home/abcdlsj/github/webserver/Aurora
--- Configuring done
--- Generating done
--- Build files have been written to: /home/abcdlsj/github/webserver/Aurora/cmake-build-debug
+/opt/clion/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/abcdlsj/github/webserver/Aurora
+CMake Error at CMakeLists.txt:1 (cmake_minimum_required):
+  CMake 3.17 or higher is required.  You are running version 3.16.5
+
+
+-- Configuring incomplete, errors occurred!

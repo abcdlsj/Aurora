@@ -1,1 +1,0 @@
-/usr/bin/g++  -g   CMakeFiles/Aurora.dir/main.cpp.o  -o Aurora 

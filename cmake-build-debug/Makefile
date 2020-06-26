@@ -143,6 +143,60 @@ Aurora/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Aurora.dir/build.make CMakeFiles/Aurora.dir/build
 .PHONY : Aurora/fast
 
+Aurora/EPoller.o: Aurora/EPoller.cc.o
+
+.PHONY : Aurora/EPoller.o
+
+# target to build an object file
+Aurora/EPoller.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Aurora.dir/build.make CMakeFiles/Aurora.dir/Aurora/EPoller.cc.o
+.PHONY : Aurora/EPoller.cc.o
+
+Aurora/EPoller.i: Aurora/EPoller.cc.i
+
+.PHONY : Aurora/EPoller.i
+
+# target to preprocess a source file
+Aurora/EPoller.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Aurora.dir/build.make CMakeFiles/Aurora.dir/Aurora/EPoller.cc.i
+.PHONY : Aurora/EPoller.cc.i
+
+Aurora/EPoller.s: Aurora/EPoller.cc.s
+
+.PHONY : Aurora/EPoller.s
+
+# target to generate assembly for a file
+Aurora/EPoller.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Aurora.dir/build.make CMakeFiles/Aurora.dir/Aurora/EPoller.cc.s
+.PHONY : Aurora/EPoller.cc.s
+
+Aurora/ThreadPool.o: Aurora/ThreadPool.cc.o
+
+.PHONY : Aurora/ThreadPool.o
+
+# target to build an object file
+Aurora/ThreadPool.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Aurora.dir/build.make CMakeFiles/Aurora.dir/Aurora/ThreadPool.cc.o
+.PHONY : Aurora/ThreadPool.cc.o
+
+Aurora/ThreadPool.i: Aurora/ThreadPool.cc.i
+
+.PHONY : Aurora/ThreadPool.i
+
+# target to preprocess a source file
+Aurora/ThreadPool.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Aurora.dir/build.make CMakeFiles/Aurora.dir/Aurora/ThreadPool.cc.i
+.PHONY : Aurora/ThreadPool.cc.i
+
+Aurora/ThreadPool.s: Aurora/ThreadPool.cc.s
+
+.PHONY : Aurora/ThreadPool.s
+
+# target to generate assembly for a file
+Aurora/ThreadPool.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Aurora.dir/build.make CMakeFiles/Aurora.dir/Aurora/ThreadPool.cc.s
+.PHONY : Aurora/ThreadPool.cc.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -179,6 +233,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... Aurora"
+	@echo "... Aurora/EPoller.o"
+	@echo "... Aurora/EPoller.i"
+	@echo "... Aurora/EPoller.s"
+	@echo "... Aurora/ThreadPool.o"
+	@echo "... Aurora/ThreadPool.i"
+	@echo "... Aurora/ThreadPool.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

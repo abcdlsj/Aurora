@@ -5,14 +5,14 @@
 #ifndef AURORA_NONCOPYABLE_H
 #define AURORA_NONCOPYABLE_H
 namespace Aurora {
-    class noncopyable {
-    public:
-        noncopyable(const noncopyable&) = delete;
-        void operator=(const noncopyable&) = delete;
+class noncopyable {
+ public:
+  noncopyable(const noncopyable &) = delete;
+  void operator=(const noncopyable &) = delete;
 
-    protected:
-        noncopyable() = default;
-        ~noncopyable() = default;
-    };
+ protected:
+  noncopyable() = default;
+  ~noncopyable() = default;
+};
 }
 #endif //AURORA_NONCOPYABLE_H
