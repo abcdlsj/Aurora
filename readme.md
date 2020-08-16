@@ -1,3 +1,0 @@
-# Aurora (WIP)
-
-> my webserverime 
