@@ -1,24 +1,29 @@
-#include <arpa/inet.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <iostream>
-#include <string.h> //for bzero
+#ifndef _TCPSERVER_H
+#define _TCPSERVER_H
+
+#include <map>
 #include <sys/epoll.h>
-#include <sys/socket.h>
-#include <unistd.h>
+
+#include "declear.h"
+#include "define.h"
+#include "i_acceptor_callback.h"
 
 using namespace std;
 
-#define MAX_LINE 100
-#define MAX_EVENTS 500
-#define MAX_LISTENFD 5
-
-class TcpServer {
+class TcpServer : public IAcceptorCallBack {
 public:
   TcpServer();
   ~TcpServer();
   void start();
 
+  virtual void newConnection(int sockfd);
+
 private:
-  int createAndListen();
+  void update(Channel *pChannel, int op);
+  int _epollfd;
+  struct epoll_event _events[MAX_EVENTS];
+  map<int, TcpConnection *> _channels;
+  Acceptor *_pAcceptor;
 };
+
+#endif // _TCPSERVER_H

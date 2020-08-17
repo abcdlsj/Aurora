@@ -1,5 +1,7 @@
 #include "tcp_server.h"
 
-int main () {
-  
+int main() {
+  TcpServer tcpserver;
+  tcpserver.start();
+  return 0;
 }
