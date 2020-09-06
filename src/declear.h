@@ -6,5 +6,7 @@ class IAcceptorCallBack;
 class Acceptor;
 class Channel;
 class TcpConnection;
+class EventLoop;
+class Epoll;
 
 #endif // _DECLEAR_H

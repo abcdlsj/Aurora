@@ -10,15 +10,14 @@
 
 using namespace std;
 
-Acceptor::Acceptor(int epollfd)
-    : _epollfd(epollfd), _listenfd(-1), _pAcceptChannel(nullptr),
-      _pCallBack(nullptr) {}
-
+Acceptor::Acceptor(EventLoop *loop)
+    : _listenfd(-1), _pAcceptChannel(nullptr), _pCallBack(nullptr),
+      _loop(loop) {}
 Acceptor::~Acceptor() {}
 
 void Acceptor::start() {
   _listenfd = createAndListen();
-  _pAcceptChannel = new Channel(_epollfd, _listenfd);
+  _pAcceptChannel = new Channel(_loop, _listenfd);
   _pAcceptChannel->setCallBack(this);
   _pAcceptChannel->enableReading();
 }

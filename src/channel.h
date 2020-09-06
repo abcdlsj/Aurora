@@ -5,13 +5,14 @@
 
 class Channel {
 public:
-  Channel(int epollfd, int sockfd);
+  Channel(EventLoop* loop, int sockfd);
   ~Channel();
   void setCallBack(IChannelCallBack *callback);
   void handleEvent();
   void setRevents(int revent);
-  int getSockfd();
   void enableReading();
+  int getSockfd();
+  int getEvents();
 
 private:
   void update();
@@ -20,6 +21,7 @@ private:
   int _events;  // 关注事件
   int _revents; // 已发生事件
   IChannelCallBack *_callBack;
+  EventLoop *_loop;
 };
 
 #endif // _CHANNEL_H

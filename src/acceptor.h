@@ -7,7 +7,7 @@
 
 class Acceptor : public IChannelCallBack {
 public:
-  Acceptor(int epollfd);
+  Acceptor(EventLoop* loop);
   ~Acceptor();
   void virtual OnIn(int socket);
   void setCallBack(IAcceptorCallBack *pCallBack);
@@ -19,6 +19,7 @@ private:
   int _listenfd;
   Channel* _pAcceptChannel;
   IAcceptorCallBack *_pCallBack;
+  EventLoop* _loop;
 };
 
 #endif // _ACCEPTOR_H

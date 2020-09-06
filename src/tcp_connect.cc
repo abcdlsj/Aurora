@@ -11,9 +11,9 @@
 #include "tcp_connect.h"
 using namespace std;
 
-TcpConnection::TcpConnection(int epollfd, int sockfd)
-    : _epollfd(epollfd), _sockfd(sockfd) {
-  _PChannel = new Channel(_epollfd, _sockfd);
+TcpConnection::TcpConnection(int sockfd, EventLoop* loop)
+    : _loop(loop), _sockfd(sockfd) {
+  _PChannel = new Channel(_loop, _sockfd);
   _PChannel->setCallBack(this);
   _PChannel->enableReading();
 }

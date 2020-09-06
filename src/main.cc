@@ -1,7 +1,9 @@
 #include "tcp_server.h"
-
+#include "eventloop.h"
 int main() {
-  TcpServer tcpserver;
+  EventLoop loop;
+  TcpServer tcpserver(&loop);
   tcpserver.start();
+  loop.loop();
   return 0;
 }

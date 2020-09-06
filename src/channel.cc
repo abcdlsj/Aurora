@@ -1,4 +1,5 @@
 #include "channel.h"
+#include "eventloop.h"
 #include "i_channel_callback.h"
 
 #include <iostream>
@@ -18,13 +19,11 @@ void Channel::handleEvent() {
   }
 }
 
+void Channel::update() { _loop->update(this); }
 int Channel::getSockfd() { return _sockfd; }
 
-void Channel::enableReading() { _events |= EPOLLIN; }
-
-void Channel::update() {
-  struct epoll_event ev;
-  ev.data.ptr = this;
-  ev.events = _events;
-  epoll_ctl(_epollfd, EPOLL_CTL_ADD, _sockfd, &ev);
+int Channel::getEvents() { return _events; }
+void Channel::enableReading() {
+  _events |= EPOLLIN;
+  update();
 }
