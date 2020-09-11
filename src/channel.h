@@ -16,12 +16,11 @@ public:
 
 private:
   void update();
-  int _epollfd;
   int _sockfd;
   int _events;  // 关注事件
   int _revents; // 已发生事件
-  IChannelCallBack *_callBack;
-  EventLoop *_loop;
+  IChannelCallBack *_pCallBack;
+  EventLoop *_pLoop;
 };
 
 #endif // _CHANNEL_H
