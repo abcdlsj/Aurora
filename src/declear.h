@@ -8,5 +8,6 @@ class Channel;
 class TcpConnection;
 class EventLoop;
 class Epoll;
+class IAuraroUser;
 
 #endif // _DECLEAR_H
