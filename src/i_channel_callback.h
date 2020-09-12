@@ -1,8 +1,8 @@
-#ifndef _ICHANNELCALLBACK_H
-#define _ICHANNELCALLBACK_H
-class IChannelCallBack {
-public:
-  void virtual OnIn(int sockfd){};
-};
+#pragma once
 
-#endif //_ICHANNELCALLBACK_H
+class IChannelCallback
+{
+    public:
+        virtual void handleRead() = 0;
+        virtual void handleWrite() = 0;
+};

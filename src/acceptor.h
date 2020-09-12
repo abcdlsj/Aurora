@@ -1,25 +1,23 @@
-#ifndef _ACCEPTOR_H
-#define _ACCEPTOR_H
-
+#pragma once
 #include "declear.h"
 #include "define.h"
 #include "i_channel_callback.h"
 
-class Acceptor : public IChannelCallBack {
-public:
-  Acceptor(EventLoop* loop);
-  ~Acceptor();
-  void virtual OnIn(int socket);
-  void setCallBack(IAcceptorCallBack *pCallBack);
-  void start();
+class acceptor : public IChannelCallback
+{
+    public:
+        acceptor(EventLoop* pLoop);
+        ~acceptor();
 
-private:
-  int createAndListen();
-  int _epollfd;
-  int _listenfd;
-  Channel* _pAcceptChannel;
-  IAcceptorCallBack *_pCallBack;
-  EventLoop* _loop;
+        void start();
+        void setCallback(IAcceptorCallback* pCallback);
+        virtual void handleRead();
+        virtual void handleWrite();
+    private:
+        int createAndListen();
+        int _listenfd;
+        Channel* _pSocketAChannel;
+        IAcceptorCallback* _pCallback;
+        EventLoop* _pLoop;
 };
 
-#endif // _ACCEPTOR_H

@@ -1,9 +1,7 @@
-#ifndef _IACCEPTORCALLBACK_H
-#define _IACCEPTORCALLBACK_H
-
-class IAcceptorCallBack {
-public:
-  void virtual newConnection(int sockfd);
+#pragma once
+class IAcceptorCallback
+{
+    public:
+        virtual void newConnection(int sockfd) = 0;
 };
 
-#endif //_IACCEPTORCALLBACK_H

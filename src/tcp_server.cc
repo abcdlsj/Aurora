@@ -1,21 +1,39 @@
-#include "tcp_server.h"
-#include "acceptor.h"
-#include "channel.h"
-#include "tcp_connect.h"
-
 #include <errno.h>
-#include <iostream>
+
+#include "tcp_server.h"
+#include "channel.h"
+#include "acceptor.h"
+#include "tcp_connection.h"
+
 #include <vector>
 
-TcpServer::TcpServer(EventLoop *loop) : _loop(loop), _pAcceptor(nullptr) {}
-TcpServer::~TcpServer() {}
-void TcpServer::start() {
-  _pAcceptor = new Acceptor(_loop); // Memory Leak !!!
-  _pAcceptor->setCallBack(this);
-  _pAcceptor->start();
+TcpServer::TcpServer(EventLoop* pLoop)
+    :_pAcceptor(NULL)
+    ,_pLoop(pLoop)
+    ,_pUser(NULL)
+{
 }
 
-void TcpServer::newConnection(int sockfd) {
-  TcpConnection *tcp = new TcpConnection(sockfd, _loop);
-  _connections[sockfd] = tcp;
+TcpServer::~TcpServer()
+{
+}
+
+void TcpServer::start()
+{
+    _pAcceptor = new acceptor(_pLoop); // Memory Leak !!!
+    _pAcceptor->setCallback(this);
+    _pAcceptor->start();
+}
+
+void TcpServer::newConnection(int sockfd)
+{
+    TcpConnection* tcp = new TcpConnection(sockfd, _pLoop); // Memory Leak !!!
+    _connections[sockfd] = tcp;
+    tcp->setUser(_pUser);
+    tcp->connectEstablished();
+}
+
+void TcpServer::setCallback(i_aurora_user* user)
+{
+    _pUser = user;
 }

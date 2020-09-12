@@ -1,13 +1,12 @@
-#ifndef _IAURORAUSER_H
-#define _IAURORAUSER_H
-
+#pragma once
 #include "declear.h"
 #include <string>
 using namespace std;
-class IAuraroUser {
-public:
-  void virtual onConnection(TcpConnection *pCon) = 0;
-  void virtual onMessage(TcpConnection *pCon, const string &data) = 0;
-};
 
-#endif // _IAURORAUSER_H
+class i_aurora_user
+{
+    public:
+        virtual void onConnection(TcpConnection* pCon) = 0;
+        virtual void onMessage(TcpConnection* pCon, Buffer* pBuf) = 0;
+        virtual void onWriteComplate(TcpConnection* pCon) = 0;
+};

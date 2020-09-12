@@ -1,26 +1,29 @@
-#ifndef _CHANNEL_H
-#define _CHANNEL_H
+#pragma once
 
 #include "declear.h"
 
-class Channel {
-public:
-  Channel(EventLoop* loop, int sockfd);
-  ~Channel();
-  void setCallBack(IChannelCallBack *callback);
-  void handleEvent();
-  void setRevents(int revent);
-  void enableReading();
-  int getSockfd();
-  int getEvents();
-
-private:
-  void update();
-  int _sockfd;
-  int _events;  // 关注事件
-  int _revents; // 已发生事件
-  IChannelCallBack *_pCallBack;
-  EventLoop *_pLoop;
+class Channel
+{
+    public:
+        Channel(EventLoop* pLoop, int sockfd);
+        ~Channel();
+        void setCallback(IChannelCallback* pCallback);
+        void handleEvent();
+        void setRevents(int revent);
+        void setIndex(int index);
+        void enableReading();
+        void enableWriting();
+        void disableWriting();
+        bool isWriting();
+        int getEvents();
+        int getfd();
+        int getIndex();
+    private:
+        void update();
+        int _sockfd;
+        int _events;
+        int _revents;
+        int _index;
+        IChannelCallback* _pCallback;
+        EventLoop* _pLoop;
 };
-
-#endif // _CHANNEL_H

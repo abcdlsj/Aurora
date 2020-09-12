@@ -1,23 +1,21 @@
-#ifndef _EPOLL_H
-#define _EPOLL_H
+#pragma once
+
 #include <sys/epoll.h>
-#include <vector>
 
 #include "declear.h"
 #include "define.h"
 
+#include <vector>
 using namespace std;
 
-class Epoll {
+class Epoll
+{
 public:
-  Epoll();
-  ~Epoll();
-  void poll(vector<Channel *> *pChannels);
-  void update(Channel *channel);
-
+    Epoll();
+    ~Epoll();
+    void poll(vector<Channel*>* pChannels);
+    void update(Channel* pChannel);
 private:
-  int _epollfd;
-  struct epoll_event _events[MAX_EVENTS];
+    int _epollfd;
+    struct epoll_event _events[MAX_EVENTS];
 };
-
-#endif // _EPOLL_H

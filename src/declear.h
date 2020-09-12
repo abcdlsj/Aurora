@@ -1,13 +1,20 @@
-#ifndef _DECLEAR_H
-#define _DECLEAR_H
+#pragma once
 
-class IChannelCallBack;
-class IAcceptorCallBack;
-class Acceptor;
+class IChannelCallback;
+class IAcceptorCallback;
 class Channel;
+class acceptor;
 class TcpConnection;
 class EventLoop;
 class Epoll;
-class IAuraroUser;
+class i_aurora_user;
+class Buffer;
+class TimerQueue;
+class Timestamp;
+class IRun0;
+class IRun2;
+class Timer;
+class Task;
+class Thread;
+class ThreadPool;
 
-#endif // _DECLEAR_H
