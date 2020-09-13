@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="Aurora"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Aurora">
+				<Option output="/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Aurora" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/../../../../include/c++/10.2.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/../../../../include/c++/10.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/../../../../include/c++/10.2.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Makefile&quot;  VERBOSE=1 Aurora"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Aurora/fast">
+				<Option output="/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Aurora" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/../../../../include/c++/10.2.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/../../../../include/c++/10.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/../../../../include/c++/10.2.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Makefile&quot;  VERBOSE=1 Aurora/fast"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/acceptor.cc">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/acceptor.h">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/buffer.cc">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/buffer.h">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/channel.cc">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/channel.h">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/channel_map.cc">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/channel_map.h">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/common.h">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/config.h">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/epolll_dispatcher.cc">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/event_dispatcher.h">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/event_loop.cc">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/event_loop.h">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/event_loop_thread.cc">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/event_loop_thread.h">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/http_request.cc">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/http_request.h">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/http_response.cc">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/http_response.h">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/http_server.cc">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/http_server.h">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/inetaddress.h">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/log.cc">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/log.h">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/poll_dispatcher.cc">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/read.cc">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/tcp_client.cc">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/tcp_connection.cc">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/tcp_connection.h">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/tcp_server.cc">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/tcp_server.h">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/thread_pool.cc">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/thread_pool.h">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/utils.cc">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/src/utils.h">
+			<Option target="Aurora"/>
+		</Unit>
+		<Unit filename="/home/abcdlsj/github/webserver/Aurora_cp/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
