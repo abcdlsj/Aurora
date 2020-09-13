@@ -1,31 +1,34 @@
 #pragma once
+
 #include "condition.h"
 #include "mutex.h"
 #include <deque>
 
 using namespace std;
 
-template <class T> class BlockingQueue {
+template<class T>
+class BlockingQueue {
 public:
-  BlockingQueue() : _cond(_mutex) {}
-  void put(const T &one) {
-    MutexLockGuard lock(_mutex);
-    _queue.push_back(one);
-    _cond.notify();
-  }
+    BlockingQueue() : _cond(_mutex) {}
 
-  T take() {
-    MutexLockGuard lock(_mutex);
-    while (_queue.empty()) {
-      _cond.wait();
+    void put(const T &one) {
+        MutexLockGuard lock(_mutex);
+        _queue.push_back(one);
+        _cond.notify();
     }
-    T front(_queue.front());
-    _queue.pop_front();
-    return front;
-  }
+
+    T take() {
+        MutexLockGuard lock(_mutex);
+        while (_queue.empty()) {
+            _cond.wait();
+        }
+        T front(_queue.front());
+        _queue.pop_front();
+        return front;
+    }
 
 private:
-  deque<T> _queue;
-  MutexLock _mutex;
-  Condition _cond;
+    deque<T> _queue;
+    MutexLock _mutex;
+    Condition _cond;
 };

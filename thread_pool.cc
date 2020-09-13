@@ -1,36 +1,30 @@
 #include "thread_pool.h"
 #include "thread.h"
 
-ThreadPool::ThreadPool() { }
+ThreadPool::ThreadPool() {}
 
-void ThreadPool::start(int numThreads)
-{
+void ThreadPool::start(int numThreads) {
     _threads.reserve(numThreads);
-    for(int i = 0 ; i < numThreads; i++)
-    {
+    for (int i = 0; i < numThreads; i++) {
         Task task(this);
-        Thread* p = new Thread(task);
+        Thread *p = new Thread(task);
         _threads.push_back(p);
         p->start();
     }
 }
 
 //virtual for Thread
-void ThreadPool::addTask(Task& task)
-{
+void ThreadPool::addTask(Task &task) {
     _tasks.put(task);
 }
 
 //virtual for Thread class
-void ThreadPool::run0()
-{
+void ThreadPool::run0() {
     runInThread();
 }
 
-void ThreadPool::runInThread()
-{
-    while(true)
-    {
+void ThreadPool::runInThread() {
+    while (true) {
         _tasks.take().doTask();
     }
 }

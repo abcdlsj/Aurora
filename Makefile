@@ -2,7 +2,7 @@
 # Copyright (c) 1997 George Foot (george.foot@merton.ox.ac.uk)
 # # All rights reserved.
 # ######################################
-# #目标（可执行文档）名称，库（譬如stdcx,iostr,mysql等），头文件路径
+# #目标（可执行文档）名称，库（譬如 stdcx, iostr, mysql等），头文件路径
 DESTINATION := aurora_server
 LIBS := pthread
 INCLUDES := .

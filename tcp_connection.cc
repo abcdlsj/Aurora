@@ -13,65 +13,50 @@
 #include <string.h> //for bzero
 #include <iostream>
 #include <unistd.h>
+
 using namespace std;
 
-TcpConnection::TcpConnection(int sockfd, EventLoop* pLoop)
-    :_sockfd(sockfd)
-    ,_pLoop(pLoop)
-    ,_pUser(NULL)
-{
+TcpConnection::TcpConnection(int sockfd, EventLoop *pLoop)
+        : _sockfd(sockfd), _pLoop(pLoop), _pUser(NULL) {
     _pSocketChannel = new Channel(_pLoop, _sockfd); // Memory Leak !!!
     _pSocketChannel->setCallback(this);
     _pSocketChannel->enableReading();
 }
 
-TcpConnection::~TcpConnection()
-{}
+TcpConnection::~TcpConnection() {}
 
-void TcpConnection::handleRead()
-{
+void TcpConnection::handleRead() {
     int sockfd = _pSocketChannel->getfd();
     int readlength;
     char line[MAX_LINE];
-    if(sockfd < 0)
-    {
+    if (sockfd < 0) {
         cout << "EPOLLIN sockfd < 0 error " << endl;
         return;
     }
     bzero(line, MAX_LINE);
-    if((readlength = read(sockfd, line, MAX_LINE)) < 0)
-    {
-        if(errno == ECONNRESET)
-        {
+    if ((readlength = read(sockfd, line, MAX_LINE)) < 0) {
+        if (errno == ECONNRESET) {
             cout << "ECONNREST closed socket fd:" << sockfd << endl;
             close(sockfd);
         }
-    }
-    else if(readlength == 0)
-    {
+    } else if (readlength == 0) {
         cout << "read 0 closed socket fd:" << sockfd << endl;
         close(sockfd);
-    }
-    else
-    {
+    } else {
         string linestr(line, readlength);
         _inBuf.append(linestr);
         _pUser->onMessage(this, &_inBuf);
     }
 }
 
-void TcpConnection::handleWrite()
-{
+void TcpConnection::handleWrite() {
     int sockfd = _pSocketChannel->getfd();
-    if(_pSocketChannel->isWriting())
-    {
+    if (_pSocketChannel->isWriting()) {
         int n = ::write(sockfd, _outBuf.peek(), _outBuf.readableBytes());
-        if( n > 0)
-        {
+        if (n > 0) {
             cout << "write " << n << " bytes data again" << endl;
             _outBuf.retrieve(n);
-            if(_outBuf.readableBytes() == 0)
-            {
+            if (_outBuf.readableBytes() == 0) {
                 _pSocketChannel->disableWriting(); //remove EPOLLOUT
                 Task task(this);
                 _pLoop->queueInLoop(task); //invoke onWriteComplate
@@ -80,61 +65,48 @@ void TcpConnection::handleWrite()
     }
 }
 
-void TcpConnection::send(const string& message)
-{
-    if(_pLoop->isInLoopThread())
-    {
+void TcpConnection::send(const string &message) {
+    if (_pLoop->isInLoopThread()) {
         sendInLoop(message);
-    }
-    else
-    {
+    } else {
         Task task(this, message, this);
         _pLoop->runInLoop(task);
     }
 }
 
-void TcpConnection::sendInLoop(const string& message)
-{
+void TcpConnection::sendInLoop(const string &message) {
     int n = 0;
-    if(_outBuf.readableBytes() == 0)
-    {
+    if (_outBuf.readableBytes() == 0) {
         n = ::write(_sockfd, message.c_str(), message.size());
-        if(n < 0)
+        if (n < 0)
             cout << "write error" << endl;
-        if(n == static_cast<int>(message.size()))
-        {
+        if (n == static_cast<int>(message.size())) {
             Task task(this);
             _pLoop->queueInLoop(task); //invoke onWriteComplate
         }
     }
 
-    if( n < static_cast<int>(message.size()))
-    {
+    if (n < static_cast<int>(message.size())) {
         _outBuf.append(message.substr(n, message.size()));
-        if(!_pSocketChannel->isWriting())
-        {
+        if (!_pSocketChannel->isWriting()) {
             _pSocketChannel->enableWriting(); //add EPOLLOUT
         }
     }
 }
 
-void TcpConnection::connectEstablished()
-{
-    if(_pUser)
+void TcpConnection::connectEstablished() {
+    if (_pUser)
         _pUser->onConnection(this);
 }
 
-void TcpConnection::setUser(i_aurora_user* user)
-{
+void TcpConnection::setUser(i_aurora_user *user) {
     _pUser = user;
 }
 
-void TcpConnection::run0()
-{
+void TcpConnection::run0() {
     _pUser->onWriteComplate(this);
 }
 
-void TcpConnection::run2(const string& message, void* param)
-{
+void TcpConnection::run2(const string &message, void *param) {
     sendInLoop(message);
 }

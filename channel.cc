@@ -5,84 +5,65 @@
 #include "event_loop.h"
 
 #include <iostream>
+
 using namespace std;
 
-Channel::Channel(EventLoop* pLoop, int sockfd)
-    :_sockfd(sockfd)
-    ,_events(0)
-    ,_revents(0)
-    ,_index(-1)
-    ,_pCallback(NULL)
-    ,_pLoop(pLoop)
-{
+Channel::Channel(EventLoop *pLoop, int sockfd)
+        : _sockfd(sockfd), _events(0), _revents(0), _index(-1), _pCallback(NULL), _pLoop(pLoop) {
 }
 
-void Channel::setCallback(IChannelCallback* pCallback)
-{
+void Channel::setCallback(IChannelCallback *pCallback) {
     _pCallback = pCallback;
 }
 
-void Channel::setRevents(int revents)
-{
+void Channel::setRevents(int revents) {
     _revents = revents;
 }
 
-void Channel::setIndex(int index)
-{
+void Channel::setIndex(int index) {
     _index = index;
 }
 
-void Channel::handleEvent()
-{
-   if(_revents & EPOLLIN)
-   {
-      _pCallback->handleRead();
-   }
-   if(_revents & EPOLLOUT)
-   {
-      _pCallback->handleWrite();
-   }
+void Channel::handleEvent() {
+    if (_revents & EPOLLIN) {
+        _pCallback->handleRead();
+    }
+    if (_revents & EPOLLOUT) {
+        _pCallback->handleWrite();
+    }
 }
 
-void Channel::enableReading()
-{
+void Channel::enableReading() {
     _events |= EPOLLIN;
     update();
 }
 
-void Channel::enableWriting()
-{
+void Channel::enableWriting() {
     _events |= EPOLLOUT;
     update();
 }
 
-void Channel::disableWriting()
-{
+void Channel::disableWriting() {
     _events &= ~EPOLLOUT;
     update();
 }
 
-bool Channel::isWriting()
-{
+bool Channel::isWriting() {
     return _events & EPOLLOUT;
 }
 
-void Channel::update()
-{
+void Channel::update() {
     _pLoop->update(this);
 }
 
-int Channel::getEvents()
-{
+int Channel::getEvents() {
     return _events;
 }
 
-int Channel::getfd()
-{
+int Channel::getfd() {
     return _sockfd;
 }
 
-int Channel::getIndex()
-{
+int Channel::getIndex() {
     return _index;
 }
