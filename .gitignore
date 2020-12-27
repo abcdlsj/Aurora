@@ -30,7 +30,7 @@
 *.exe
 *.out
 *.app
-# 
-.ccls-cache
-.idea/*
+
 .vscode/*
+.idea/*
+.ccls-cache/*

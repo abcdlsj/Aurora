@@ -1,4 +1,4 @@
-/usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/abcdlsj/github/webserver/Aurora_cp
+/usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/abcdlsj/github/webserver/Aurora
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/abcdlsj/github/webserver/Aurora_cp/cmake-build-debug
+-- Build files have been written to: /home/abcdlsj/github/webserver/Aurora/cmake-build-debug
